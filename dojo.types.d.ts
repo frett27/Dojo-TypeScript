@@ -254,6 +254,55 @@ declare module "dojo/_base/declare"
 }
 
 
+
+declare module Dojo {
+
+
+	class Url {
+		
+		constructor(u : string);
+
+		authority : any;
+		fragment : any;
+		host : any;
+		password : any;
+		path : any;
+		port : any;
+		query : any;
+		scheme : any;
+		uri : any;
+		user : any;
+
+	}
+
+	class Kernel {
+
+		locale : string;
+	}
+
+
+}
+
+
+
+
+declare module "dojo/_base/url"
+{
+	var declare: Dojo.Url;
+	export = declare;
+
+}
+
+
+declare module "dojo/_base/kernel"
+{
+	var declare: Dojo.Kernel;
+	export = declare;
+
+}
+
+
+
 // Widgets
 
 declare module Dijit
