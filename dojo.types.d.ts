@@ -496,12 +496,12 @@ declare module dijit
 
 		own(handle: Dojo.RemovableHandle): Dojo.RemovableHandle[];
 
-		placeAt(referenceId: string, position: string): _WidgetBase;
-		placeAt(referenceNode: HTMLElement, position: string): _WidgetBase;
-		placeAt(referenceWidget: _WidgetBase, position: string): _WidgetBase;
-		placeAt(referenceId: string, position: number): _WidgetBase;
-		placeAt(referenceNode: HTMLElement, position: number): _WidgetBase;
-		placeAt(referenceWidget: _WidgetBase, position: number): _WidgetBase;
+		placeAt(referenceId: string, position?: string): _WidgetBase;
+		placeAt(referenceNode: HTMLElement, position?: string): _WidgetBase;
+		placeAt(referenceWidget: _WidgetBase, position?: string): _WidgetBase;
+		placeAt(referenceId: string, position?: number): _WidgetBase;
+		placeAt(referenceNode: HTMLElement, position?: number): _WidgetBase;
+		placeAt(referenceWidget: _WidgetBase, position?: number): _WidgetBase;
 
 		postCreate(): void;
 		startup(): void;

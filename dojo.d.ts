@@ -337,7 +337,10 @@ declare module Dojo
 		getObject(path: string, create?: boolean, context?: Object): Object;
 
 		hitch<F extends Function>(scope: Object, method: F): F;
+		hitch<F extends Function>(scope: Object, method: string): F;
+
 		hitch(scope: Object, method: string): Function;
+		hitch(scope: Object, method: string, ...v_args:any[]): Function;
 
 		mixin<T extends Object>(dest: T, ...sources: PropertiesMap[]): T;
 
