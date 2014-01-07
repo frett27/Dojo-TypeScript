@@ -17,11 +17,6 @@ declare module "dojox/gfx"
 	export = a;
 }
 
-declare module "dojo/fx/Toggler" 
-{
-	var a : any;
-	export = a;
-}
 
 declare module "dojox/fx" 
 {

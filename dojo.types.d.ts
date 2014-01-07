@@ -261,7 +261,6 @@ declare module "dojo/_base/declare"
 }
 
 
-
 declare module Dojo {
 
 
@@ -295,7 +294,7 @@ declare module Dojo {
 
 declare module "dojo/_base/url"
 {
-	var declare: Dojo.Url;
+	var declare: typeof Dojo.Url;
 	export = declare;
 
 }
