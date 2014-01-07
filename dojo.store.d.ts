@@ -12,7 +12,7 @@ declare module Dojo
 	{
 		// dojo/store/api/Store
 
-		class _Store<T>
+		class _Store<T, K>
 		{
 			idProperty: string;
 
@@ -21,45 +21,45 @@ declare module Dojo
 			queryEngine(query: RegExp, options?: QueryOptions): QueryEngine<T>;
 			queryEngine(query: (item: T) => boolean, options?: QueryOptions): QueryEngine<T>;
 
-			PutDirectives: new () => PutDirectives<T>;
+			PutDirectives: new () => PutDirectives<T, K>;
 			QueryOptions: new () => QueryOptions;
 			QueryResults: new () => QueryResults<T>;
 			SortInformation: new () => SortInformation;
 		}
 
-		class Store<T> extends _Store<T>
+		class Store<T, K> extends _Store<T, K>
 		{
-			add(object: T, directives?: PutDirectives<T>): number;
-			get(id: number): T;
+			add(object: T, directives?: PutDirectives<T, K>): K;
+			get(id: K): T;
 			getChildren<V>(parent: T, options?: QueryOptions): QueryResults<V>;
-			getIdentity(object: T): number;
+			getIdentity(object: T): K;
 			getMetadata(object: T): { [metadata: string]: any; };
-			put(object: T, directives?: PutDirectives<T>): number;
+			put(object: T, directives?: PutDirectives<T, K>): K;
 
 			query(query: string, options?: QueryOptions): QueryResults<T>;
 			query(query: AttributesMap, options?: QueryOptions): QueryResults<T>;
 			query(query: (item: T) => boolean, options?: QueryOptions): QueryResults<T>;
 
-			remove(id: number): boolean;
+			remove(id: K): boolean;
 
 			transaction(): Transaction;
 			Transaction: new () => Transaction;
 		}
 
-		class StoreAsync<T> extends _Store<T>
+		class StoreAsync<T, K> extends _Store<T, K>
 		{
-			add(object: T, directives?: PutDirectives<T>): dojo.Promise<number>;
-			get(id: number): dojo.Promise<T>;
+			add(object: T, directives?: PutDirectives<T, K>): dojo.Promise<K>;
+			get(id: K): dojo.Promise<T>;
 			getChildren<V>(parent: T, options?: QueryOptions): dojo.Promise<QueryResults<V>>;
-			getIdentity(object: T): dojo.Promise<number>;
+			getIdentity(object: T): dojo.Promise<K>;
 			getMetadata(object: T): dojo.Promise<Object>;
-			put(object: T, directives?: PutDirectives<T>): dojo.Promise<number>;
+			put(object: T, directives?: PutDirectives<T, K>): dojo.Promise<K>;
 
 			query(query: string, options?: QueryOptions): dojo.Promise<QueryResults<T>>;
 			query(query: AttributesMap, options?: QueryOptions): dojo.Promise<QueryResults<T>>;
 			query(query: (item: T) => boolean, options?: QueryOptions): dojo.Promise<QueryResults<T>>;
 
-			remove(id: number): boolean;
+			remove(id: K): boolean;
 
 			transaction(): TransactionAsync;
 			Transaction: new () => TransactionAsync;
@@ -79,9 +79,9 @@ declare module Dojo
 
 		// dojo/store/api/Store.PutDirectives
 
-		interface PutDirectives<T>
+		interface PutDirectives<T, K>
 		{
-			id?: number;
+			id?: K;
 			before?: T;
 			parent?: Object;
 			overwrite?: boolean;
@@ -97,17 +97,18 @@ declare module Dojo
 		}
 
 		// dojo/store/api/Store.QueryResults
+		// NOTE - QueryResults may be a simple array or a promise
 
 		interface QueryResults<T> extends _HTMLArray<T>
 		{
 			total: number;
 
-			filter(callback: (item: T) => boolean, thisObject?: Object): QueryResults<T>;
-			forEach(callback: (item: T) => void , thisObject?: Object): QueryResults<T>;
-			map<V>(callback: (item: T) => V, thisObject?: Object): QueryResults<V>;
-			then(callback: (items: T[]) => void , errorHandler: (error: any) => void ): QueryResults<T>;
+			filter(callback: (item: T, index: number, array: T[]) => boolean, thisObject?: Object): QueryResults<T>;
+			forEach(callback: (item: T, index: number, array: T[]) => void, thisObject?: Object): QueryResults<T>;
+			map<V>(callback: (item: T, index: number, array: T[]) => V, thisObject?: Object): QueryResults<V>;
 
-			observe? (listener: (object: any, removedFrom: number, insertedInto: number) => void , includeAllUpdates?: boolean): { cancel(): void; };
+			// Added by dojo/store/Observable
+			observe? (listener: (object: any, removedFrom: number, insertedInto: number) => void, includeAllUpdates?: boolean): Dojo.CancellableHandle;
 		}
 
 		// dojo/store/api/Store.SortInformation
@@ -146,7 +147,7 @@ declare module Dojo
 			{
 				data?: any[];
 			}
-			class Store<T> extends Dojo.Store.Store<T> implements CreateOptions
+			class Store<T, K> extends Dojo.Store.Store<T, K> implements CreateOptions
 			{
 				constructor(options: CreateOptions);
 
@@ -155,7 +156,7 @@ declare module Dojo
 				index: Dojo.Dictionary<number>;
 			}
 		}
-	
+
 		// dojo/store/DataStore
 
 		module DataStore
@@ -165,7 +166,7 @@ declare module Dojo
 				target?: string;
 				store?: Object;		// Should be DojoDataStore, but needs to pull in dojo_data.ts and dojo.ts, so don't do it
 			}
-			class Store<T> extends Dojo.Store.Store<T> implements CreateOptions
+			class Store<T, K> extends Dojo.Store.Store<T, K> implements CreateOptions
 			{
 				constructor(options: CreateOptions);
 
@@ -173,7 +174,7 @@ declare module Dojo
 				target: string;
 				store: Object;
 			}
-			class StoreAsync<T> extends Dojo.Store.StoreAsync<T> implements CreateOptions
+			class StoreAsync<T, K> extends Dojo.Store.StoreAsync<T, K> implements CreateOptions
 			{
 				constructor(options: CreateOptions);
 
@@ -195,7 +196,7 @@ declare module Dojo
 				descendingPrefix?: string;
 				headers?: { [header: string]: string; };
 			}
-			class Store<T> extends Dojo.Store.StoreAsync<T> implements CreateOptions
+			class Store<T, K> extends Dojo.Store.StoreAsync<T, K> implements CreateOptions
 			{
 				constructor(options: CreateOptions);
 
@@ -210,22 +211,21 @@ declare module Dojo
 	}
 }
 
-
 // Module definitions
 
-declare module "dojo/store/Memory" 
+declare module "dojo/store/Memory"
 {
-	class Memory<T> extends Dojo.Store.Memory.Store<T> { }
+	var Memory: typeof Dojo.Store.Memory.Store;
 	export = Memory;
 }
 declare module "dojo/store/DataStore"
 {
-	class DataStore<T> extends Dojo.Store.DataStore.Store<T> { }
+	var DataStore: typeof Dojo.Store.DataStore.Store;
 	export = DataStore;
 }
 declare module "dojo/store/JsonRest"
 {
-	class JsonRest<T> extends Dojo.Store.JsonRest.Store<T> { }
+	var JsonRest: typeof Dojo.Store.JsonRest.Store;
 	export = JsonRest;
 }
 
@@ -237,7 +237,7 @@ declare module Dojo
 	{
 		interface Observable
 		{
-			<V, S extends _Store<V>>(store: S): S;
+			<V, K, S extends _Store<V, K>>(store: S): S;
 		}
 	}
 }
@@ -255,7 +255,7 @@ declare module Dojo
 	{
 		interface Cache
 		{
-			<V, S extends _Store<V>>(masterStore: S, cachingStore: _Store<V>, options?: { isLoaded?: (item: V) => boolean; }): S;
+			<V, K, S extends _Store<V, K>>(masterStore: S, cachingStore: _Store<V, K>, options?: { isLoaded?: (item: V) => boolean; }): S;
 		}
 	}
 }
