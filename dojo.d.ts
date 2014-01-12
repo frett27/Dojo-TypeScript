@@ -1231,7 +1231,8 @@ declare module dojo
 
 		// Make NodeList array-like
 		length: number;
-		[index: number]: HTMLElement;
+		// [index: number]: HTMLElement;
+		// don't work on compile !!!
 
 		addClass(className: string): dojo.NodeList;
 		addClass(classNames: string[]): dojo.NodeList;

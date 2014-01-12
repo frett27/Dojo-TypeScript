@@ -157,6 +157,7 @@ declare module dijit
 			on(type: string, listener: Dojo.Action): Dojo.RemovableHandle;
 			on(type: string, listener: (ev: KeyboardEvent) => boolean): Dojo.RemovableHandle;
 			on(type: Dojo.ExtensionEvent, func: Dojo.Action): Dojo.RemovableHandle;
+		    on(type: string, listener: EventListener): Dojo.RemovableHandle;
 		}
 	}
 }
